@@ -7,7 +7,7 @@ class Individual
 public:
 	Individual();
 	Individual(int size);
-	Individual(std::vector<int> solution);
+	Individual(std::vector<int>& solution);
 	Individual(const Individual& other);
 
 	Individual& operator=(const Individual& other);
@@ -16,6 +16,8 @@ public:
 	void mutate(double mutationProb);
 	double getRandomProbability();
 	std::vector<Individual> crossover(const Individual& other, double crossoverProbality);
+	void resizeGenome(int size);
+	void setGeneOnIndex(int gene, int index);
 	std::vector<int> getGenome();
 private:
 	std::vector<int> genome;

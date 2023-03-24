@@ -9,7 +9,7 @@ Individual::Individual()  {
 	randomCrossoverPoint = std::uniform_int_distribution<int>(0, 0);
 }
 
-Individual::Individual(std::vector<int> solution) {
+Individual::Individual(std::vector<int>& solution) {
 	randomCrossoverPoint = std::uniform_int_distribution<int>(0, solution.size() - 1);
 	genome = solution;
 }
@@ -52,6 +52,15 @@ double Individual::getRandomProbability() {
 	return randomProbability(rd);
 }
 
+void Individual::resizeGenome(int size) {
+	genome.resize(size);
+	randomCrossoverPoint = std::uniform_int_distribution<int>(0, size);
+}
+
+void Individual::setGeneOnIndex(int gene, int index) {
+	genome[index] = gene;
+}
+
 std::vector<Individual> Individual::crossover(const Individual &other, double crossoverProbality) {
 	
 	double probability = getRandomProbability();
@@ -59,21 +68,24 @@ std::vector<Individual> Individual::crossover(const Individual &other, double cr
 
 		int crossoverPoint = randomCrossoverPoint(rd);
 
-		std::vector<int> newGenome1(genome.size());
-		std::vector<int> newGenome2(genome.size());
+		Individual newIndividual1;
+		Individual newIndividual2;
+
+		newIndividual1.resizeGenome(genome.size());
+		newIndividual2.resizeGenome(genome.size());
 
 		for (int i = 0; i < crossoverPoint; i++) {
-			newGenome1[i] = genome[i];
-			newGenome2[i] = other.genome[i];
+			newIndividual1.setGeneOnIndex(genome[i], i);
+			newIndividual1.setGeneOnIndex(other.genome[i], i);
 		}
 
 		for (int i = crossoverPoint; i < genome.size(); i++) {
-			newGenome1[i] = other.genome[i];
-			newGenome2[i] = genome[i];
+			newIndividual1.setGeneOnIndex(other.genome[i], i);
+			newIndividual1.setGeneOnIndex(genome[i], i);
 		}
 		
-		return { Individual(newGenome1), Individual(newGenome2) };
+		return { newIndividual1, newIndividual2 };
 	}
 	else
-		return { Individual(genome), Individual(other.genome) };
+		return { *this, other };
 }
