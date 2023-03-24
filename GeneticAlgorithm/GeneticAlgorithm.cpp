@@ -53,7 +53,7 @@ int GeneticAlgorithm::getRandomIndividualIndex() {
 
 int GeneticAlgorithm::chooseParentIndex() {
 	int randomIndividuals[2];
-	randomIndividuals[0] = getRandomIndividualIndex();//najpierw losujemy 2 i wybieramy lepszego pozniej znowu to samo i mamy dwoch rodzicow  
+	randomIndividuals[0] = getRandomIndividualIndex();//we get 2 random individuals idexes and we choose the better one
 	randomIndividuals[1] = getRandomIndividualIndex();
 
 	int chosenIndex;
@@ -82,17 +82,17 @@ Individual GeneticAlgorithm::evaluatePopulation() {
 	while (((time = clock()) - start) / (double)CLOCKS_PER_SEC * 1000 < iterationDurationInMs) {
 		for (int i = 0; i < populationSize; i += 2) {
 			if (i + 1 == populationSize) {
-				//gdy populacja nieparzysta
+				//when population is an odd number
 				newPopulation[i] = population[chooseParentIndex()];
 				newPopulation[i].mutate(mutationProbability);
 			}
 			else {
-				//wybor rodzicow
+				//choosing parents
 				parentsIndexes[0] = chooseParentIndex();
 				parentsIndexes[1] = chooseParentIndex();
 
 				if (parentsIndexes[0] != parentsIndexes[1]) {
-					//wybor dzieci
+					//choosing children
 					childrenPair = population[parentsIndexes[0]].crossover(population[parentsIndexes[1]], crossoverProbability);
 
 					newPopulation[i] = childrenPair[0];
@@ -100,7 +100,7 @@ Individual GeneticAlgorithm::evaluatePopulation() {
 
 				}
 				else {
-					//gdy rodzice tacy sami - crossover nic nie da
+					//when parents are the same
 					newPopulation[i] = population[parentsIndexes[0]];
 					newPopulation[i + 1] = population[parentsIndexes[1]];
 				}
